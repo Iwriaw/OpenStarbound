@@ -23,6 +23,7 @@
 #include "StarQuestManager.hpp"
 #include "StarPlayerUniverseMap.hpp"
 #include "StarWorldTemplate.hpp"
+#include "StarColor.hpp"
 
 namespace Star {
 
@@ -490,11 +491,14 @@ void UniverseClient::sendChat(String const& text, ChatSendMode sendMode, Maybe<b
     // 命令消息保持原样
     finalText = text;
   } else {
-    // 普通聊天消息添加随机颜色
+    List<String> colorNames;
+    for (auto const& pair : Color::NamedColors) {
+      if (pair.first != "clear")
+        colorNames.append(pair.first);
+    }
     for (char c : text) {
-      // 生成随机颜色代码 (0-9, a-f)
-      char colorCode = '0' + (rand() % 10);
-      finalText += strf("^%c%c^set;", colorCode, c);
+      String colorName = colorNames[rand() % colorNames.size()];
+      finalText += strf("^%s;%c", colorName, c);
     }
   }
 
