@@ -497,7 +497,7 @@ void UniverseClient::sendChat(String const& text, ChatSendMode sendMode, Maybe<b
     }
     for (auto c : text) {
       String colorName = colorNames[rand() % colorNames.size()];
-      finalText += strf("^{};{}", colorName, c);
+      finalText += "^" + colorName + ";" + c;
     }
   }
 
