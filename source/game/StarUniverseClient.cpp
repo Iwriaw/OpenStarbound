@@ -495,9 +495,9 @@ void UniverseClient::sendChat(String const& text, ChatSendMode sendMode, Maybe<b
       if (!StringList{"clear", "black", "gray", "lightgray", "darkgray"}.contains(pair.first))
         colorNames.append(pair.first);
     }
-    for (auto it = text.begin(); it != text.end(); ++it) {
+    for (auto c : text) {
       String colorName = colorNames[rand() % colorNames.size()];
-      finalText += strf("^{};{}", colorName, *it);
+      finalText += strf("^{};{}", colorName, c);
     }
   }
 
