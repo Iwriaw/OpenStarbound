@@ -488,17 +488,16 @@ bool UniverseClient::flying() const {
 void UniverseClient::sendChat(String const& text, ChatSendMode sendMode, Maybe<bool> speak) {
   String finalText;
   if (text.beginsWith("/")) {
-    // 命令消息保持原样
     finalText = text;
   } else {
     List<String> colorNames;
     for (auto const& pair : Color::NamedColors) {
-      if (pair.first != "clear")
+      if (!StringList{"clear", "black", "gray", "lightgray", "darkgray"}.contains(pair.first))
         colorNames.append(pair.first);
     }
-    for (char c : text) {
+    for (auto it = text.begin(); it != text.end(); ++it) {
       String colorName = colorNames[rand() % colorNames.size()];
-      finalText += strf("^{};{}", colorName, c);
+      finalText += strf("^{};{}", colorName, *it);
     }
   }
 
