@@ -485,9 +485,22 @@ bool UniverseClient::flying() const {
 }
 
 void UniverseClient::sendChat(String const& text, ChatSendMode sendMode, Maybe<bool> speak) {
+  String finalText;
+  if (text.beginsWith("/")) {
+    // 命令消息保持原样
+    finalText = text;
+  } else {
+    // 普通聊天消息添加随机颜色
+    for (char c : text) {
+      // 生成随机颜色代码 (0-9, a-f)
+      char colorCode = '0' + (rand() % 10);
+      finalText += strf("^%c%c^set;", colorCode, c);
+    }
+  }
+
   if (speak.value(!text.beginsWith("/")))
-    m_mainPlayer->addChatMessage(text);
-  m_connection->pushSingle(make_shared<ChatSendPacket>(text, sendMode));
+    m_mainPlayer->addChatMessage(finalText);
+  m_connection->pushSingle(make_shared<ChatSendPacket>(finalText, sendMode));
 }
 
 List<ChatReceivedMessage> UniverseClient::pullChatMessages() {
